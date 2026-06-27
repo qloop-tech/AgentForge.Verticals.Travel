@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AgentForge.Verticals.Travel/AgentForge.Verticals.Travel.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AgentForge.Verticals.Travel.Tests/AgentForge.Verticals.Travel.Tests.csproj" />
+  </Folder>
+</Solution>
