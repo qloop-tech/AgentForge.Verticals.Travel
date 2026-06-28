@@ -7,15 +7,16 @@ This repository demonstrates how an external vertical owns its prompt, customer 
 ## Build and Test
 
 ```bash
-dotnet test AgentForge.Verticals.Travel.slnx
+dotnet restore AgentForge.Verticals.Travel.slnx --source https://api.nuget.org/v3/index.json --no-cache
+dotnet test AgentForge.Verticals.Travel.slnx --no-restore
 ```
 
-The solution expects the QLoop-provided `AgentForge.Verticals.Abstractions` package to be available from NuGet.org. Before public package release, maintainers can temporarily restore from a local package source.
+The solution consumes the QLoop-provided `AgentForge.Verticals.Abstractions` package from NuGet.org. This keeps the Travel vertical aligned with how customer-owned vertical plugins reference the public AgentForge contract package.
 
 ## Publish Plugin Bundle
 
 ```bash
-dotnet publish src/AgentForge.Verticals.Travel/AgentForge.Verticals.Travel.csproj -c Release -o ../Waha/artifacts/plugins/travel
+dotnet publish src/AgentForge.Verticals.Travel/AgentForge.Verticals.Travel.csproj -c Release -o ../AgentForge.Core/artifacts/plugins/travel
 ```
 
 Configure the core AgentForge platform with either:

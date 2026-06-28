@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Restore and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore from NuGet.org
+        run: dotnet restore AgentForge.Verticals.Travel.slnx --source https://api.nuget.org/v3/index.json --no-cache
+
+      - name: Test
+        run: dotnet test AgentForge.Verticals.Travel.slnx --no-restore
