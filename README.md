@@ -10,7 +10,7 @@ This repository demonstrates how an external vertical owns its prompt, customer 
 dotnet test AgentForge.Verticals.Travel.slnx
 ```
 
-The solution restores `AgentForge.Verticals.Abstractions` from the local AgentForge package source configured in `NuGet.config`.
+The solution expects the QLoop-provided `AgentForge.Verticals.Abstractions` package to be available from NuGet.org. Before public package release, maintainers can temporarily restore from a local package source.
 
 ## Publish Plugin Bundle
 
