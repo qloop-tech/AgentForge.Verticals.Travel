@@ -4,6 +4,11 @@ Reference Travel vertical plugin for AgentForge, provided by QLoop Technologies.
 
 This repository demonstrates how an external vertical owns its prompt, customer configuration, MCP tools/resources, domain data, media assets, and scheduled message content while the AgentForge core platform owns WhatsApp transport, queueing, AI orchestration, hosting, health checks, and outbound sending.
 
+## Prerequisites
+
+.NET SDK 11.0.100 or a servicing patch in that feature band, selected by
+`global.json`. Both the Travel plugin and its AgentForge host target .NET 11.
+
 ## Build and Test
 
 ```bash
