@@ -7,6 +7,7 @@ namespace AgentForge.Verticals.Travel.Checkout;
 public sealed class CheckoutAttempt
 {
     public string Id { get; set; } = "";
+
     public string ScopeKey { get; set; } = "";
     public string PartitionKey { get; set; } = "";
     public string HoldReference { get; set; } = "";
