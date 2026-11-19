@@ -1,0 +1,26 @@
+{
+  "name": "TravelTriangle prospect demo",
+  "tagline": "Synthetic Kerala inquiry-to-quote demonstration",
+  "description": "Clearly labelled demo inventory, not live TravelTriangle offers.",
+  "contact": {
+    "phone": "Not provided in this demo",
+    "whatsapp": "Not provided in this demo",
+    "email": "Not provided in this demo",
+    "website": "https://traveltriangle.com/",
+    "office": "Not provided in this demo",
+    "officeHours": "Not provided in this demo"
+  },
+  "social": {},
+  "payment": {
+    "bankName": "Not enabled \u2014 no payments accepted in this batch",
+    "accountName": "Not enabled \u2014 no payments accepted in this batch",
+    "accountNumber": "Not enabled \u2014 no payments accepted in this batch",
+    "ifsc": "Not enabled \u2014 no payments accepted in this batch",
+    "upiId": "Not enabled \u2014 no payments accepted in this batch"
+  },
+  "cancellationPolicy": {
+    "tiers": [],
+    "note": "Demo proposals only. No booking or cancellation contract exists."
+  },
+  "groupDiscountTiers": []
+}

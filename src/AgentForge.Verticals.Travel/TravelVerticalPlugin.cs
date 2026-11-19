@@ -1,4 +1,6 @@
 using AgentForge.Verticals.Abstractions;
+using AgentForge.Verticals.Travel.Journey;
+using Microsoft.Agents.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -20,6 +22,14 @@ public sealed class TravelVerticalPlugin : IVerticalPlugin
     {
         ArgumentNullException.ThrowIfNull(services);
 
+        services.AddHttpContextAccessor();
+        services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<TravelInvocationScope>();
+        services.AddSingleton<TravelScenarioCatalog>();
+        services.AddSingleton<TravelJourneyStore>();
+        services.AddSingleton<TravelJourneyService>();
+        services.AddHostedService<TravelSchemaInitializer>();
+        services.AddSingleton<AIContextProvider, TravelJourneyContextProvider>();
         services.AddSingleton<IValidateOptions<TravelCustomerProfileOptions>, TravelCustomerProfileOptionsValidator>();
         services.AddOptions<TravelCustomerProfileOptions>()
             .BindConfiguration(TravelCustomerProfileOptions.SectionName)

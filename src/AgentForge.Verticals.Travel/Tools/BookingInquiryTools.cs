@@ -1,53 +1,19 @@
+using System.Text.Json;
 using ModelContextProtocol.Server;
-using AgentForge.Verticals.Travel.Services;
+using AgentForge.Verticals.Travel.Journey;
 
 namespace AgentForge.Verticals.Travel.Tools;
 
 [McpServerToolType]
-public class BookingInquiryTools(BookingInquiryService bookingService, TourCatalogService catalog)
+public sealed class BookingInquiryTools(TravelJourneyService service)
 {
     [McpServerTool(Name = "create_booking_inquiry", ReadOnly = false)]
-    [Description("Register a customer booking inquiry. Call this once you have gathered the customer's details.")]
-    public string CreateBookingInquiry(
-        [Description("Customer's WhatsApp phone number")] string phone,
-        [Description("Customer's full name")] string customerName,
-        [Description("Tour ID to book")] string tourId,
-        [Description("Desired travel month in YYYY-MM format")] string travelMonth,
-        [Description("Number of passengers")] int paxCount,
-        [Description("Any special requests (e.g. vegetarian meals, wheelchair access, honeymoon decoration)")] string? specialRequests = null)
-    {
-        var tour = catalog.GetById(tourId);
-        if (tour is null)
-            return $"Cannot create inquiry: tour '{tourId}' not found. Please verify the tour ID.";
-
-        var inquiry = bookingService.Create(phone, customerName, tourId, travelMonth, paxCount, specialRequests);
-
-        return $"""
-            ✅ *Booking Inquiry Registered!*
-            Reference: *{inquiry.InquiryId}*
-            Customer: {customerName}
-            Tour: {tour.Name}
-            Travel Month: {travelMonth} | Pax: {paxCount}
-            {(specialRequests is not null ? $"Special Requests: {specialRequests}" : "")}
-
-            Our team will contact you within 2 hours on this WhatsApp number to confirm availability and collect the 25% deposit. 🎉
-            """;
-    }
+    [Description("Compatibility guidance: use save_travel_requirements to persist a scoped inquiry, then create_travel_quote. This legacy operation cannot create a booking or promise deposits.")]
+    public string CreateBookingInquiry(string phone, string customerName, string tourId, string travelMonth, int paxCount, string? specialRequests = null) =>
+        "Use save_travel_requirements with verified party details, exact date, total family budget and preferences. Phone is not an authorization key. No booking or deposit is confirmed.";
 
     [McpServerTool(Name = "get_customer_inquiries", ReadOnly = true)]
-    [Description("Retrieve existing booking inquiries for a customer by their phone number.")]
-    public string GetCustomerInquiries(
-        [Description("Customer's WhatsApp phone number")] string phone)
-    {
-        var inquiries = bookingService.GetByPhone(phone);
-        if (inquiries.Count == 0)
-            return "No previous inquiries found for this number. I can help you plan a new trip! 😊";
-
-        var lines = inquiries.Select(i =>
-        {
-            var tour = catalog.GetById(i.TourId);
-            return $"• *{i.InquiryId}* — {tour?.Name ?? i.TourId} | {i.TravelMonth} | {i.PaxCount} pax | Created: {i.CreatedAt:dd MMM yyyy}";
-        });
-        return $"Found {inquiries.Count} inquiry(ies):\n\n{string.Join("\n", lines)}";
-    }
+    [Description("Retrieve the current authenticated conversation's persisted inquiry. The legacy phone argument is ignored for authorization.")]
+    public async Task<string> GetCustomerInquiries(string phone, CancellationToken cancellationToken) =>
+        JsonSerializer.Serialize(await service.GetAsync(cancellationToken));
 }

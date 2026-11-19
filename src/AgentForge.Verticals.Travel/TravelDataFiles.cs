@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+
 namespace AgentForge.Verticals.Travel;
 
 internal static class TravelDataFiles
@@ -13,8 +15,15 @@ internal static class TravelDataFiles
             throw new DirectoryNotFoundException($"Travel data directory was not found at '{DataRoot}'.");
     }
 
-    public static string ReadAllText(string fileName)
+    public static string ReadAllText(string fileName, IConfiguration? configuration = null)
     {
+        if (Path.GetFileName(fileName) != fileName) throw new ArgumentException("Data file name must not include a path.");
+        var external = configuration?["CUSTOMER_CONFIG_PATH"];
+        if (!string.IsNullOrWhiteSpace(external))
+        {
+            var externalPath = Path.Combine(Path.GetFullPath(external), "Data", fileName);
+            if (File.Exists(externalPath)) return File.ReadAllText(externalPath);
+        }
         EnsureDataDirectoryExists();
         var path = Path.Combine(DataRoot, fileName);
         if (!File.Exists(path))

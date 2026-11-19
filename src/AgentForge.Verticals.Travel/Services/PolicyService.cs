@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using AgentForge.Verticals.Travel.Models;
 
@@ -8,12 +9,12 @@ public class PolicyService
     private readonly List<FaqTopic> _faq;
     private readonly AgencyInfo _agency;
 
-    public PolicyService()
+    public PolicyService(IConfiguration? configuration = null)
     {
-        _faq = JsonSerializer.Deserialize<List<FaqTopic>>(TravelDataFiles.ReadAllText("FAQ.json"),
+        _faq = JsonSerializer.Deserialize<List<FaqTopic>>(TravelDataFiles.ReadAllText("FAQ.json", configuration),
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
 
-        _agency = JsonSerializer.Deserialize<AgencyInfo>(TravelDataFiles.ReadAllText("AgencyInfo.json"),
+        _agency = JsonSerializer.Deserialize<AgencyInfo>(TravelDataFiles.ReadAllText("AgencyInfo.json", configuration),
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
     }
 

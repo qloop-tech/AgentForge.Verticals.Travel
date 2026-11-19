@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using AgentForge.Verticals.Travel.Models;
 
@@ -7,9 +8,9 @@ public sealed class TravelMediaService
 {
     private readonly List<TravelMediaItem> _items;
 
-    public TravelMediaService()
+    public TravelMediaService(IConfiguration? configuration = null)
     {
-        var json = TravelDataFiles.ReadAllText("TravelMedia.json");
+        var json = TravelDataFiles.ReadAllText("TravelMedia.json", configuration);
         _items = JsonSerializer.Deserialize<List<TravelMediaItem>>(json, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true

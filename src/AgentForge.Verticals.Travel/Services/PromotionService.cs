@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using AgentForge.Verticals.Travel.Models;
 
@@ -7,9 +8,9 @@ public class PromotionService
 {
     private readonly List<Promotion> _promotions;
 
-    public PromotionService()
+    public PromotionService(IConfiguration? configuration = null)
     {
-        var json = TravelDataFiles.ReadAllText("Promotions.json");
+        var json = TravelDataFiles.ReadAllText("Promotions.json", configuration);
         _promotions = JsonSerializer.Deserialize<List<Promotion>>(json,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
     }

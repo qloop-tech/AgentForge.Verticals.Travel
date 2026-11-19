@@ -1,0 +1,61 @@
+{
+  "version": "kerala-family-demo-2026-11-19-v1",
+  "isDemo": true,
+  "destination": "Kerala",
+  "days": 5,
+  "currency": "INR",
+  "offers": [
+    {
+      "id": "KERALA-FIXED",
+      "expert": "Demo Expert A \u2014 Backwater Trails",
+      "kind": "fixed",
+      "departureDate": "2026-12-12",
+      "availableSlots": 6,
+      "adultPrice": 18000,
+      "childPrice": 9000,
+      "infantPrice": 0,
+      "fourStarSupplement": 3000,
+      "houseboatSupplement": 2000,
+      "taxRate": 0.05,
+      "inclusions": [
+        "4 nights accommodation in the selected hotel category",
+        "Daily breakfast",
+        "Private AC ground transfers and sightseeing",
+        "Family pricing includes the stated child age band; infant under 2 uses infant rate",
+        "Houseboat experience only when selected; supplement shown separately"
+      ],
+      "exclusions": [
+        "Flights and trains",
+        "Lunch and dinner unless stated",
+        "Travel insurance and personal expenses",
+        "No live supplier availability, slot hold, payment or booking"
+      ]
+    },
+    {
+      "id": "KERALA-CUSTOM",
+      "expert": "Demo Expert B \u2014 Southern Escapes",
+      "kind": "custom",
+      "departureDate": null,
+      "availableSlots": null,
+      "adultPrice": 20000,
+      "childPrice": 10000,
+      "infantPrice": 0,
+      "fourStarSupplement": 3500,
+      "houseboatSupplement": 2200,
+      "taxRate": 0.05,
+      "inclusions": [
+        "4 nights accommodation in the selected hotel category",
+        "Daily breakfast",
+        "Private AC ground transfers and sightseeing",
+        "Family pricing includes the stated child age band; infant under 2 uses infant rate",
+        "Houseboat experience only when selected; supplement shown separately"
+      ],
+      "exclusions": [
+        "Flights and trains",
+        "Lunch and dinner unless stated",
+        "Travel insurance and personal expenses",
+        "No live supplier availability, slot hold, payment or booking"
+      ]
+    }
+  ]
+}

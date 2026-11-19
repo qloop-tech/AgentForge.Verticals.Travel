@@ -14,7 +14,6 @@ public sealed class TravelMcpRegistrar : IVerticalMcpRegistrar
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddSingleton<TourCatalogService>();
-        services.AddSingleton<BookingInquiryService>();
         services.AddSingleton<DestinationService>();
         services.AddSingleton<HotelService>();
         services.AddSingleton<PromotionService>();

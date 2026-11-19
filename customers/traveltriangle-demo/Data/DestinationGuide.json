@@ -1,0 +1,65 @@
+[
+  {
+    "destination": "Kerala",
+    "region": "South India",
+    "bestMonths": [
+      "September",
+      "October",
+      "November",
+      "December",
+      "January",
+      "February",
+      "March"
+    ],
+    "peakSeason": "October\u2013March",
+    "offSeason": "June\u2013August (monsoon \u2013 Ayurvedic peak season!)",
+    "avgBudgetPerDayINR": 4500,
+    "weather": {
+      "winterTemp": "22\u201332\u00b0C",
+      "summerTemp": "28\u201335\u00b0C",
+      "monsoonRainfall": "Heavy (Jun\u2013Aug)"
+    },
+    "topAttractions": [
+      "Alleppey Backwaters (houseboat)",
+      "Munnar Tea Estates",
+      "Periyar Wildlife Sanctuary",
+      "Kovalam & Varkala Beaches",
+      "Fort Kochi \u2013 Chinese Fishing Nets"
+    ],
+    "cuisine": [
+      "Appam with stew",
+      "Kerala prawn curry",
+      "Puttu & kadala",
+      "Banana leaf meals",
+      "Toddy (coconut palm wine)"
+    ],
+    "visaPolicy": {
+      "indianNationals": "No visa required",
+      "foreignNationals": "e-Tourist Visa (India) required for most nationalities"
+    },
+    "packingEssentials": {
+      "clothing": [
+        "Lightweight cotton clothes",
+        "Modest clothes for temples",
+        "Light rain jacket (Oct\u2013Nov)",
+        "Swimwear for beaches"
+      ],
+      "gear": [
+        "Insect repellent",
+        "Sunscreen",
+        "Good walking shoes",
+        "Waterproof bag"
+      ],
+      "documents": [
+        "ID proof / passport",
+        "Hotel bookings",
+        "Return tickets"
+      ],
+      "health": [
+        "Stay hydrated",
+        "Mosquito precautions in backwater areas",
+        "Carry stomach meds"
+      ]
+    }
+  }
+]

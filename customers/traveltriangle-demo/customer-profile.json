@@ -1,0 +1,74 @@
+{
+  "TravelCustomerProfile": {
+    "DisplayName": "TravelTriangle prospect demo",
+    "AgentName": "Tara",
+    "AgentDescription": "TravelTriangle demonstration holiday assistant using synthetic inventory",
+    "McpServerName": "TravelDemoMCP",
+    "AssetPathPrefix": "/images/",
+    "PreviewTitle": "TravelTriangle \u2022 Demonstration",
+    "PreviewDescription": "A Kerala family holiday inquiry and quote demonstration. Synthetic inventory; no real booking.",
+    "PromptFileName": "prompt.md",
+    "BusinessProfile": {
+      "Overview": "Prospect demonstration inspired by TravelTriangle public holiday package descriptions. All experts, prices and slots are synthetic demo data. No TravelTriangle affiliation or live integration is claimed.",
+      "PrimaryAudience": "TravelTriangle central platform and sales team",
+      "Tone": "Warm, concise and clear about demo status.",
+      "SupportedLanguages": [
+        "English",
+        "Hindi greetings acknowledged warmly"
+      ],
+      "Specialties": [
+        "Kerala family holidays",
+        "Fixed departures and customizable expert quotes"
+      ],
+      "UpsellOffers": [
+        "3-star to 4-star hotel option",
+        "Optional houseboat experience"
+      ]
+    },
+    "LeadCapture": {
+      "RequiredFields": [
+        "Customer name",
+        "Destination",
+        "Exact travel date",
+        "Departure city",
+        "Adults and each child age",
+        "Duration",
+        "Total family budget in INR",
+        "Hotel category",
+        "Houseboat preference"
+      ],
+      "OptionalFields": [
+        "Departure city",
+        "Hotel preference",
+        "Special celebration or occasion",
+        "Passport or visa needs"
+      ]
+    },
+    "Capabilities": {
+      "ShowSightseeingImages": true,
+      "ShowHotelImages": true,
+      "CreateBookingInquiries": true,
+      "CollectPostTripFeedback": true,
+      "SuggestUpsells": true
+    },
+    "BusinessHours": {
+      "TimeZone": "Asia/Kolkata",
+      "WeeklySchedule": {
+        "Monday-Friday": "09:00-18:00",
+        "Saturday": "10:00-16:00",
+        "Sunday": "Closed"
+      }
+    },
+    "Handoff": {
+      "Enabled": true,
+      "Destination": "Demo operator in OpenWA Conversations",
+      "ResponseWindow": "No guaranteed response time in this demo",
+      "Rules": [
+        "Offer a human operator when requested. Do not claim to have transferred until an operator takes over.",
+        "Never promise a deposit, payment link, reservation or supplier response."
+      ]
+    }
+  },
+  "AGENTFORGE_CUSTOMER_ID": "traveltriangle-prospect-demo",
+  "AGENTFORGE_CONFIG_VERSION": "2026-11-19-v1"
+}

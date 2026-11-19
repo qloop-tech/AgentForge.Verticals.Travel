@@ -1,0 +1,71 @@
+[
+  {
+    "id": "KERALA-DEMO",
+    "name": "Kerala family holiday \u2014 DEMO inventory",
+    "destination": "Kerala",
+    "duration": "4 nights / 5 days",
+    "durationDays": 5,
+    "price": 18000,
+    "singleSupplement": 0,
+    "currency": "INR",
+    "tags": [
+      "demo",
+      "family",
+      "kerala"
+    ],
+    "highlights": [
+      "Munnar tea gardens",
+      "Alleppey backwaters",
+      "Kochi sightseeing"
+    ],
+    "inclusions": [
+      "4 nights accommodation in the selected hotel category",
+      "Daily breakfast",
+      "Private AC ground transfers and sightseeing",
+      "Family pricing includes the stated child age band; infant under 2 uses infant rate",
+      "Houseboat experience only when selected; supplement shown separately"
+    ],
+    "exclusions": [
+      "Flights and trains",
+      "Lunch and dinner unless stated",
+      "Travel insurance and personal expenses",
+      "No live supplier availability, slot hold, payment or booking"
+    ],
+    "availability": {
+      "2026-12": 6
+    },
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Kochi arrival",
+        "activities": "Illustrative arrival transfer and sightseeing"
+      },
+      {
+        "day": 2,
+        "title": "Munnar",
+        "activities": "Tea gardens and relaxed family sightseeing"
+      },
+      {
+        "day": 3,
+        "title": "Munnar",
+        "activities": "Scenic sightseeing"
+      },
+      {
+        "day": 4,
+        "title": "Alleppey",
+        "activities": "Optional houseboat experience when selected"
+      },
+      {
+        "day": 5,
+        "title": "Departure",
+        "activities": "Return transfer; flights excluded"
+      }
+    ],
+    "reviews": [],
+    "imageUrls": [
+      "images/tours/kerala/1.jpg",
+      "images/tours/kerala/2.jpg",
+      "images/tours/kerala/3.jpg"
+    ]
+  }
+]

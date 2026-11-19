@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 using AgentForge.Verticals.Travel.Models;
 
@@ -7,9 +8,9 @@ public class HotelService
 {
     private readonly List<Hotel> _hotels;
 
-    public HotelService()
+    public HotelService(IConfiguration? configuration = null)
     {
-        var json = TravelDataFiles.ReadAllText("Hotels.json");
+        var json = TravelDataFiles.ReadAllText("Hotels.json", configuration);
         _hotels = JsonSerializer.Deserialize<List<Hotel>>(json,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
     }

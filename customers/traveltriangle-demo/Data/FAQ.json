@@ -1,0 +1,20 @@
+[
+  {
+    "topic": "booking",
+    "questions": [
+      {
+        "q": "How do I book or pay?",
+        "a": "This demo saves inquiries and versioned quotes only. It does not hold slots, accept deposits or confirm bookings."
+      }
+    ]
+  },
+  {
+    "topic": "pricing",
+    "questions": [
+      {
+        "q": "What is included?",
+        "a": "Use the saved quote for the exact family breakdown. Flights are excluded. All prices are demo inventory."
+      }
+    ]
+  }
+]
