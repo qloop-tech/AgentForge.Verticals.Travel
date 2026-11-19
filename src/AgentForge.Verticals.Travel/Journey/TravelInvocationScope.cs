@@ -11,7 +11,7 @@ namespace AgentForge.Verticals.Travel.Journey;
 /// <summary>Consumes the host's generic verified claims or framework run metadata. Never accepts model identity.</summary>
 public sealed class TravelInvocationScope(IConfiguration configuration, IHttpContextAccessor http)
 {
-    public string Key()
+    private string[] Identity()
     {
         string Read(string field)
         {
@@ -26,6 +26,27 @@ public sealed class TravelInvocationScope(IConfiguration configuration, IHttpCon
         var expected = new[] { configuration["AGENTFORGE_TENANT_ID"] ?? "default", configuration["AGENTFORGE_CUSTOMER_ID"] ?? "default", configuration["AGENTFORGE_CONFIG_VERSION"] ?? "1", "travel" };
         if (!values.Take(4).SequenceEqual(expected) || values.Any(string.IsNullOrWhiteSpace))
             throw new UnauthorizedAccessException("Invocation identity does not match this plugin configuration.");
-        return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(values))));
+        return values;
+    }
+
+    public string Key() => Hash(Identity());
+    public string InventoryKey(string inventoryVersion, string offerId) => Hash([.. Identity().Take(4), inventoryVersion, offerId]);
+    private static string Hash(string[] values) => Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(values))));
+
+    public void RequireApprovedCall(string functionName, object arguments)
+    {
+        const string key = "agentforge:approved-action";
+        var raw = http.HttpContext?.User.Identity?.IsAuthenticated == true
+            ? http.HttpContext.User.FindFirstValue(key)
+            : AIAgent.CurrentRunContext?.RunOptions?.AdditionalProperties?.TryGetValue(key, out var value) == true ? value as string : null;
+        if (string.IsNullOrWhiteSpace(raw)) throw new UnauthorizedAccessException("This action requires an explicit authenticated approval.");
+        try
+        {
+            using var document = JsonDocument.Parse(raw);
+            if (document.RootElement.GetProperty("name").GetString() == functionName &&
+                JsonElement.DeepEquals(document.RootElement.GetProperty("arguments"), JsonSerializer.SerializeToElement(arguments))) return;
+        }
+        catch (Exception ex) when (ex is JsonException or KeyNotFoundException or InvalidOperationException) { }
+        throw new UnauthorizedAccessException("Approval does not match this exact action and arguments.");
     }
 }

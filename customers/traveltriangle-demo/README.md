@@ -14,7 +14,9 @@ This directory owns customer-specific branding, prompt and data. `travel-scenari
 4. In OpenWA Conversations choose **Take over**. Send: “I have noted a preference for 4-star hotels and a houseboat experience.” Show that the assistant stays paused for new customer messages.
 5. Choose **Resume bot**. From the second account: “Please save those preferences and revise the fixed quote.” The new fixed quote is **₹63,000**, with an immutable earlier quote history. No slot is held.
 6. Restart only WebApi and McpHost through Aspire, wait for health, then ask: “What hotel preference, houseboat option and quote did we save?” The plugin context provider retrieves the records from PostgreSQL; native Agent Framework sessions supply conversation history.
-7. If asked to book/pay: explain that this batch ends at a saved proposal. Holds, native action approval, sandbox payment events and confirmation references are the next batch. Do not claim completion.
+7. From the second account, ask to hold the saved fixed quote. The assistant presents the exact quote, total, party and date plus `APPROVE <code>` / `DECLINE <code>`. No slots are held yet. The traveller must send the exact code; a normal yes or an operator note does not approve it.
+8. To demonstrate persistence, take over/resume and restart WebApi/McpHost before approval. Then approve from the second account: exactly one 15-minute demo hold should appear. Its absolute/local expiry is returned. Earlier quote versions remain intact. Releasing/expiry restores capacity; an expired replay never renews it.
+9. If asked to pay: explain that payment is the next implementation step. The chosen plan is a Razorpay-hosted Standard Payment Link for the full quote amount, followed by verified payment and a persisted demo booking reference. No payment link or confirmed booking exists in this holds batch.
 
 ## Pricing contract
 
@@ -26,6 +28,6 @@ Each quote stores the requirements, offer/inventory version, component prices, i
 
 Use a fresh test chat or increment `AGENTFORGE_CONFIG_VERSION` in `customer-profile.json`, then restart both .NET resources. Changing the version intentionally isolates the customer journey AND native conversation namespace; old records remain stored. **Do not truncate transport queues, webhook/send deduplication records, operator controls or production chat history to reset the demo.** This is namespace isolation, not deletion or retention cleanup.
 
-Dates are fixed demo data and must be future-dated when rehearsing later. Bump the scenario version when changing offer prices/rules and the customer configuration version when intentionally starting a fresh demonstration. Preserve the old configuration if earlier records must be accessed again. Do not switch configuration while conversations are active.
+Dates are fixed demo data and must be future-dated when rehearsing later. Bump the scenario version when changing offer prices/rules and the customer configuration version when intentionally starting a fresh demonstration. Preserve the old configuration if earlier records must be accessed again. Do not switch configuration while conversations or holds are active. Release or let demo holds expire first. Changing customer/inventory configuration creates an isolated demonstration inventory partition; it is not a production inventory-reset mechanism.
 
 MCP tools require the host's signed identity headers. Model-supplied phone numbers and references cannot select another customer's data. Ordinary unauthenticated MCP Inspector requests now receive 401; use the signed host client for these tools. The generic identity protocol is documented in the Core batch report.

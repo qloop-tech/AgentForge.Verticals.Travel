@@ -1,6 +1,7 @@
 using AgentForge.Verticals.Abstractions;
 using AgentForge.Verticals.Travel.Journey;
 using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -28,6 +29,9 @@ public sealed class TravelVerticalPlugin : IVerticalPlugin
         services.AddSingleton<TravelScenarioCatalog>();
         services.AddSingleton<TravelJourneyStore>();
         services.AddSingleton<TravelJourneyService>();
+        services.AddSingleton<TravelHoldService>();
+        services.AddSingleton<Func<AIFunction,AIFunction>>(_=>TravelHoldApprovalPolicy.Apply);
+        services.AddSingleton<Func<ToolApprovalRequestContent,string?>>(_=>TravelHoldApprovalPolicy.Describe);
         services.AddHostedService<TravelSchemaInitializer>();
         services.AddSingleton<AIContextProvider, TravelJourneyContextProvider>();
         services.AddSingleton<IValidateOptions<TravelCustomerProfileOptions>, TravelCustomerProfileOptionsValidator>();

@@ -13,6 +13,7 @@ public sealed class TravelJourneyStore(IConfiguration configuration) : IAsyncDis
 {
     private readonly NpgsqlDataSource _database = NpgsqlDataSource.Create(configuration.GetConnectionString("vertical-db")
         ?? throw new InvalidOperationException("ConnectionStrings:vertical-db is required for durable travel records."));
+    internal NpgsqlDataSource Database => _database;
     public async Task InitializeAsync(CancellationToken ct)
     {
         await using var connection = await _database.OpenConnectionAsync(ct);
@@ -28,6 +29,14 @@ public sealed class TravelJourneyStore(IConfiguration configuration) : IAsyncDis
             CREATE TABLE IF NOT EXISTS travel_quote_versions (
                 scope_key text NOT NULL, reference text NOT NULL, version integer NOT NULL,
                 body jsonb NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(scope_key, reference));
+            CREATE TABLE IF NOT EXISTS travel_holds (
+                reference text PRIMARY KEY, scope_key text NOT NULL, inventory_key text NOT NULL,
+                quote_reference text NOT NULL, party_size integer NOT NULL CHECK(party_size>0),
+                expires_at timestamptz NOT NULL, state text NOT NULL CHECK(state IN ('active','released')),
+                operation_id text NOT NULL, request_hash text NOT NULL, quote jsonb NOT NULL,
+                created_at timestamptz NOT NULL DEFAULT now(), UNIQUE(scope_key,operation_id));
+            CREATE INDEX IF NOT EXISTS ix_travel_holds_inventory ON travel_holds(inventory_key,state,expires_at);
+            CREATE INDEX IF NOT EXISTS ix_travel_holds_scope ON travel_holds(scope_key,state,expires_at);
             """, connection, transaction);
         await command.ExecuteNonQueryAsync(ct);
         await transaction.CommitAsync(ct);
@@ -56,6 +65,11 @@ public sealed class TravelJourneyStore(IConfiguration configuration) : IAsyncDis
                 if (reader.GetString(0) != hash) throw new JourneyConflictException("Operation ID already used with different input.");
                 return JsonSerializer.Deserialize<TravelJourney>(reader.GetString(1))!;
             }
+        }
+        await using (var held = new NpgsqlCommand("SELECT EXISTS(SELECT 1 FROM travel_holds WHERE scope_key=$1 AND state='active' AND expires_at>clock_timestamp())", connection, transaction))
+        {
+            held.Parameters.AddWithValue(scope);
+            if (await held.ExecuteScalarAsync(ct) is true) throw new JourneyConflictException("Release the active hold before changing requirements or quotes.");
         }
         TravelJourney? current;
         await using (var select = new NpgsqlCommand("SELECT body::text FROM travel_journeys WHERE scope_key=$1", connection, transaction))
