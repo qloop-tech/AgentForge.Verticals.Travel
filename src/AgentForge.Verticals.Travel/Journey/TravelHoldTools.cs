@@ -14,7 +14,7 @@ public sealed class TravelHoldTools(TravelHoldService holds)
     [Description("Get current remaining fixed-departure demo slots after unexpired holds across all conversations. Custom offers require supplier confirmation.")]
     public async Task<string> GetAvailability(CancellationToken cancellationToken) => JsonSerializer.Serialize(await holds.AvailabilityAsync(cancellationToken));
     [McpServerTool(Name = "hold_travel_quote", ReadOnly = false)]
-    [Description("Request explicit traveller approval, then place a 15-minute DEMO fixed-departure hold for an exact saved quote/revision. No payment or booking. Native approval is mandatory; do not claim a hold exists until this tool executes successfully. A fresh operationId identifies the exact action.")]
+    [Description("Invoke this tool to request HOST-MANAGED native approval for a 15-minute DEMO fixed-departure hold on an exact saved quote/revision. Do not ask a separate confirmation question first; invocation pauses for the host approval code before any hold is created. No payment or booking. Native approval is mandatory; do not claim a hold exists until this tool executes successfully. A fresh operationId identifies the exact action.")]
     public async Task<string> HoldQuote(string quoteReference, int expectedRevision, string operationId, decimal expectedTotal, string currency, int partySize, string startDate, CancellationToken cancellationToken)
     {
         try { return JsonSerializer.Serialize(await holds.HoldAsync(quoteReference, expectedRevision, operationId, expectedTotal, currency, partySize, startDate, cancellationToken)); }

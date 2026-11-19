@@ -1,3 +1,6 @@
+using AgentForge.Verticals.Travel.Checkout;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Routing;
 using AgentForge.Verticals.Abstractions;
 using AgentForge.Verticals.Travel.Journey;
 using Microsoft.Agents.AI;
@@ -30,9 +33,16 @@ public sealed class TravelVerticalPlugin : IVerticalPlugin
         services.AddSingleton<TravelJourneyStore>();
         services.AddSingleton<TravelJourneyService>();
         services.AddSingleton<TravelHoldService>();
-        services.AddSingleton<Func<AIFunction,AIFunction>>(_=>TravelHoldApprovalPolicy.Apply);
-        services.AddSingleton<Func<ToolApprovalRequestContent,string?>>(_=>TravelHoldApprovalPolicy.Describe);
+        services.AddSingleton<Func<AIFunction, AIFunction>>(_ => TravelHoldApprovalPolicy.Apply);
+        services.AddSingleton<Func<ToolApprovalRequestContent, string?>>(_ => TravelHoldApprovalPolicy.Describe);
         services.AddHostedService<TravelSchemaInitializer>();
+        services.AddSingleton((Action<IHostApplicationBuilder>)CheckoutIntegration.Configure);
+        services.AddHostedService<CheckoutSchemaInitializer>();
+        services.AddSingleton<TravelCheckoutGuard>();
+        services.AddSingleton<TravelCheckoutService>();
+        services.AddHttpClient<RazorpayClient>(http => { http.BaseAddress = new Uri("https://api.razorpay.com/v1/"); http.Timeout = TimeSpan.FromSeconds(30); });
+        services.AddTransient<ITravelPaymentProvider>(sp => sp.GetRequiredService<RazorpayClient>());
+        services.AddSingleton<AIContextProvider, TravelCheckoutContextProvider>();
         services.AddSingleton<AIContextProvider, TravelJourneyContextProvider>();
         services.AddSingleton<IValidateOptions<TravelCustomerProfileOptions>, TravelCustomerProfileOptionsValidator>();
         services.AddOptions<TravelCustomerProfileOptions>()
@@ -44,6 +54,8 @@ public sealed class TravelVerticalPlugin : IVerticalPlugin
     {
         ArgumentNullException.ThrowIfNull(services);
         services.AddScoped<IScheduledActionHandler, TravelScheduledActionHandler>();
+        services.AddSingleton((Action<IEndpointRouteBuilder>)CheckoutEndpoints.Map);
+        services.AddHostedService<CheckoutProcessor>();
     }
 
     public IVerticalDescriptor CreateDescriptor(IServiceProvider serviceProvider)

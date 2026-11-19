@@ -1,3 +1,4 @@
+using AgentForge.Verticals.Travel.Checkout;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -8,7 +9,7 @@ using NpgsqlTypes;
 namespace AgentForge.Verticals.Travel.Journey;
 
 /// <summary>Database-clock expiry and inventory-level locks apply across all scoped conversations.</summary>
-public sealed class TravelHoldService(TravelJourneyStore store, TravelScenarioCatalog catalog, TravelInvocationScope scope, IConfiguration? configuration = null)
+public sealed class TravelHoldService(TravelJourneyStore store, TravelScenarioCatalog catalog, TravelInvocationScope scope, IConfiguration? configuration = null, TravelCheckoutGuard? checkoutGuard = null)
 {
     private const int HoldMinutes = 15;
     private readonly TimeZoneInfo _timeZone = TimeZoneInfo.FindSystemTimeZoneById(configuration?["TravelCustomerProfile:BusinessHours:TimeZone"] ?? "UTC");
@@ -23,6 +24,11 @@ public sealed class TravelHoldService(TravelJourneyStore store, TravelScenarioCa
         List<TravelHold> results = [];
         await using var reader = await command.ExecuteReaderAsync(ct);
         while (await reader.ReadAsync(ct)) results.Add(Read(reader));
+        if(checkoutGuard is not null)
+        {
+            var booked=await checkoutGuard.BookedAsync(scope.Key(),ct);
+            results=results.Select(x=>booked.Contains(x.Reference)?x with{Status="booked",ExpiryDisplay="Confirmed DEMO booking allocation"}:x).ToList();
+        }
         return [.. results];
     }
     public async Task<TravelAvailability[]> AvailabilityAsync(CancellationToken ct)
@@ -113,6 +119,7 @@ public sealed class TravelHoldService(TravelJourneyStore store, TravelScenarioCa
         await using var connection = await store.Database.OpenConnectionAsync(ct);
         await using var transaction = await connection.BeginTransactionAsync(ct);
         var scopeKey = scope.Key(); await GateAsync(connection, transaction, scopeKey, ct);
+        if(checkoutGuard is not null)await checkoutGuard.EnsureReleasableAsync(scopeKey,holdReference,ct);
         await using var update = new NpgsqlCommand("""
             UPDATE travel_holds SET state='released' WHERE reference=$1 AND scope_key=$2
             RETURNING reference,quote_reference,party_size,expires_at,state,quote::text

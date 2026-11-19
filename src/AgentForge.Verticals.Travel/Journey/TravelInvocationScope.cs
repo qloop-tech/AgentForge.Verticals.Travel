@@ -30,6 +30,9 @@ public sealed class TravelInvocationScope(IConfiguration configuration, IHttpCon
     }
 
     public string Key() => Hash(Identity());
+    public string PartitionKey() => Hash(Identity().Take(4).ToArray());
+    public (string Account, string Chat) Address() { var values = Identity(); return (values[4], values[5]); }
+    public static string ConfiguredPartition(IConfiguration configuration) => Hash([configuration["AGENTFORGE_TENANT_ID"] ?? "default", configuration["AGENTFORGE_CUSTOMER_ID"] ?? "default", configuration["AGENTFORGE_CONFIG_VERSION"] ?? "1", "travel"]);
     public string InventoryKey(string inventoryVersion, string offerId) => Hash([.. Identity().Take(4), inventoryVersion, offerId]);
     private static string Hash(string[] values) => Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(values))));
 

@@ -16,7 +16,7 @@ This directory owns customer-specific branding, prompt and data. `travel-scenari
 6. Restart only WebApi and McpHost through Aspire, wait for health, then ask: “What hotel preference, houseboat option and quote did we save?” The plugin context provider retrieves the records from PostgreSQL; native Agent Framework sessions supply conversation history.
 7. From the second account, ask to hold the saved fixed quote. The assistant presents the exact quote, total, party and date plus `APPROVE <code>` / `DECLINE <code>`. No slots are held yet. The traveller must send the exact code; a normal yes or an operator note does not approve it.
 8. To demonstrate persistence, take over/resume and restart WebApi/McpHost before approval. Then approve from the second account: exactly one 15-minute demo hold should appear. Its absolute/local expiry is returned. Earlier quote versions remain intact. Releasing/expiry restores capacity; an expired replay never renews it.
-9. If asked to pay: explain that payment is the next implementation step. The chosen plan is a Razorpay-hosted Standard Payment Link for the full quote amount, followed by verified payment and a persisted demo booking reference. No payment link or confirmed booking exists in this holds batch.
+9. Ask to pay the full quote on an active hold. A separate native approval authorizes a 30-minute checkout window and one Razorpay-hosted TEST payment link. Approve that code, open the returned URL and complete the test payment. The plugin verifies the signed webhook and provider API before persisting one demo booking and notifying WhatsApp. A late payment needs operator reconciliation; it never silently reacquires expired capacity. Human takeover pauses automated confirmation until resume.
 
 ## Pricing contract
 
